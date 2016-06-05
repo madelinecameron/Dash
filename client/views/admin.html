@@ -1,0 +1,203 @@
+<template name="adminPanel">
+	{{#if currentUser}}
+		<div style="margin-top:30px">
+			<div class="col-md-4 col-md-push-1">
+				<div class="row">
+					<div class="panel panel-primary">
+						<div class="panel-heading">
+							<h3 class="panel-title">Shipping</h3>
+						</div>
+						<div class="panel-body">
+							<div class="form-inline">
+								<div class="input-group" style="width:100%">
+									<input class="form-control" type="text" placeholder="Shipping number" id="shippingNumber" >
+									<a href="#" class="input-group-addon" id="submitShippingNumber" style="width:10%">
+										<i class="fa fa-plus"></i>
+									</a>
+								</div>
+							</div>
+							<div style="margin-top:15px">
+								{{#each shipments}}
+									ID: {{this.id}}
+								{{/each}}
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="panel panel-primary">
+						<div class="panel-heading">
+							<h3 class="panel-title">Finances</h3>
+						</div>
+						<div class="panel-body">
+							<div>
+								<div class="form-group">
+								{{#chosen width="100%"}}
+									<select data-placeholder="Select a bank..." class="chosen-select" id="institution">
+	<!-- 									{{#each banks}}
+											<option value="{{id}}">{{name}}</option>
+										{{/each}} -->
+									</select>
+								{{/chosen}}
+								</div>
+								<div class="margin-top:25px">
+									<div class="form-group">
+										<input type="text" class="form-control" id="accountName" placeholder="Username">
+									</div>
+									<div class="form-group">
+										<input type="password" class="form-control" id="password" placeholder="Password">
+									</div>
+									<div class="form-group">
+										<button type="button" class="btn btn-primary">Login</button>
+									</div>
+								</div>
+							</div>
+							<div style="margin-top:15px">
+								Active accounts go here
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="panel panel-primary">
+						<div class="panel-heading">
+							<h3 class="panel-title">Webhooks</h3>
+						</div>
+						<div class="panel-body">
+							<div class="form-group">
+								<input class="form-control" type="text" placeholder="Webhook URL" id="webhookURL">
+							</div>
+							<div class="form-group">
+								<select data-placeholder="Select a polling frequency..." id="frequency" class="form-control">
+									<option value="1">1 minutes</option>
+									<option value="5">5 minutes</option>
+									<option value="15">15 minutes</option>
+									<option value="30">30 minutes</option>
+									<option value="60">1 hour</option>
+									<option value="180">3 hours</option>
+									<option value="360">6 hours</option>
+									<option value="720">12 hours</option>
+									<option value="1440">24 hours</option>
+								</select>
+							</div>
+							<div class="form-group">
+								<button type="button" class="btn btn-primary" id="submitWebhook">Add Webhook</button>
+							</div>
+							<div style="margin-top:15px">
+								{{#each activeWebhooks}}
+									<div class="form-inline">
+										<div class="input-group" style="width:100%">
+											<span>Webhook: {{this.data.url}}, every {{pollingInterval this}}</span>
+											<a href="#" id="{{this._id}}" class="removeBtn" style="width:10%">
+												<i class="fa fa-times"></i>
+											</a>
+										</div>
+									</div>
+								{{/each}}
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="col-md-4 col-md-push-2">
+				<div class="row">
+					<div class="panel panel-primary">
+						<div class="panel-heading">
+							<h3 class="panel-title">YouTube</h3>
+						</div>
+						<div class="panel-body">
+							<div>
+								{{#if googleAuthed}}
+									{{#each YTSub}}
+										<div class="checkbox">
+										  <label>
+										    <input type="checkbox" id="{{this.id}}" value="{{this.id}}">
+										    {{this.name}}
+										  </label>
+										</div>
+									{{/each}}
+								{{else}}
+									<button id="authWithGoogle" class="btn btn-primary">Authenticate with Google</button>
+								{{/if}}
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="panel panel-primary">
+						<div class="panel-heading">
+							<h3 class="panel-title">Text</h3>
+						</div>
+						<div class="panel-body">
+							<div class="form-inline">
+								<div class="input-group" style="width:100%">
+									<input class="form-control" type="text" placeholder="Text to display" id="textDisplay">
+									<a href="#" class="input-group-addon" id="submitText" style="width:10%">
+										<i class="fa fa-plus"></i>
+									</a>
+								</div>
+							</div>
+							<div style="margin-top:15px">
+								{{#each displayTexts}}
+									<div class="form-inline">
+										<div class="input-group" style="width:100%">
+											<span>Text: {{this.data.text}}</span>
+											<a href="#" id="{{this._id}}" class="removeBtn" style="width:10%">
+												<i class="fa fa-times"></i>
+											</a>
+										</div>
+									</div>
+								{{/each}}
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="panel panel-primary">
+						<div class="panel-heading">
+							<h3 class="panel-title">Days Until</h3>
+						</div>
+						<div class="panel-body">
+							<div>
+								<div class="form-group">
+									<input type="text" class="form-control" id="daysUntilTitle" placeholder="Title">
+								</div>
+								<div class="form-group" style="margin-top:15px">
+									<div class="calendar" data-provide="datepicker">
+									    <input type="text" class="form-control" id="date">
+									</div>
+								</div><br/>
+								<div class="form-group" style="margin-top:-15px">
+									<button class="btn btn-primary" id="submitDaysUntil">Add Days Until</button>
+								</div>
+							</div>
+							<div style="margin-top:15px">
+								{{#each daysUntil}}
+									<div class="well">
+										<div class="form-inline">
+											<div class="input-group" style="width:100%">
+												<span>Title: {{this.data.title}}</span>
+												<a href="#" id="{{this._id}}" class="removeBtn" style="width:10%">
+													<i class="fa fa-times"></i>
+												</a>
+											</div>
+										</div>
+										<div>
+											Date: {{this.data.date}}
+										</div>
+									</div>
+								{{/each}}
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	{{else}}
+		<div class="panel panel-primary col-md-4 col-md-push-4" style="padding:2.5%;margin-top:25%">
+			<input type="text" placeholder="Username" id="username" class="form-control" style="margin-bottom:10px">
+			<input type="password" placeholder="Password" id="password" class="form-control" style="margin-bottom:10px">
+			<button type="button" class="btn btn-default" id="login">Login</button>
+		</div>
+	{{/if}}
+</template>
