@@ -16,8 +16,11 @@ Template.eventLayout.helpers({
       case 'SHIPPING':
         return getShippingInfo(this.data.code);
         break;
+      case 'UNTIL':
+        return getUntil(this);
+        break;
       case 'TEXT':
-        return getCalculateText(this.data);
+        return this.data.text;
         break;
       case 'LIST':
         break;
@@ -38,16 +41,18 @@ const getShippingInfo = (code) => {
   return Meteor.call('getShipment', code);
 }
 
+const getUntil = (untilObj) => {
+  return {
+    type: untilObj.type,
+    title: untilObj.data.title,
+    data: {
+      until: moment(untilObj.data.date).fromNow()
+    }
+  }
+}
+
 const getCalculateText = (textObject) => {
   switch(textObject.type) {
-    case 'UNTIL': 
-      return {
-        type: textObject.type,
-        title: textObject.title,
-        data: {
-          until: moment(textObject.data).fromNow()
-        }
-      }
     case 'DISPLAY':
       return textObject;
     case 'FINANCIALS':

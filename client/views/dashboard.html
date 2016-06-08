@@ -1,8 +1,7 @@
 <template name="dashboard">
-  <div class="container">
-    ksldjhfkjdslfhgkdjfhgkjdfhgkjbh
-    {{#each events}}
-      {{> eventLayout this}}
-    {{/each}}
-  </div>
+	{{#each events}}
+	  <div class="box-{{@index}} box">
+	  {{> eventLayout this}}
+	  </div>
+	{{/each}}
 </template>
